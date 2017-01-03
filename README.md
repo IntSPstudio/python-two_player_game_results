@@ -10,4 +10,4 @@
 | 3.Score  | 3.Score  | 3.Class  |
 | ...      | ...      | ...      |
 
-I have only tested this software on Windows 10 and Linux Mint
+Tested with Windows 10 and Linux Mint
