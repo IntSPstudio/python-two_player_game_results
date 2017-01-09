@@ -1,6 +1,6 @@
 # Two Player Game Results
 
-![](http://i.imgur.com/mN5vDC9.png)
+![](http://i.imgur.com/cm5Vbpl.png)
 
 ### CSV Scoreboard sample:
 | Player 1 | Player 2 |          |
