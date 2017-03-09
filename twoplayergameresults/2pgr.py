@@ -2,8 +2,8 @@
 # Made by IntSPstudio
 # Two Player Game Results
 # Thank you for using this software!
-# Version: 0.0.6.20170305
-# ID: 0.0.7.20170309
+# Version: 0.0.7.20170309
+# ID: 980005010
 #
 # Twitter: @IntSPstudio
 #|==============================================================|#
