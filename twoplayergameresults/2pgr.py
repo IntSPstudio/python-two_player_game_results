@@ -3,7 +3,7 @@
 # Two Player Game Results
 # Thank you for using this software!
 # Version: 0.0.6.20170305
-# ID: 980005010
+# ID: 0.0.7.20170309
 #
 # Twitter: @IntSPstudio
 #|==============================================================|#
@@ -124,46 +124,33 @@ if __name__ == "__main__":
 				classRounds = len(classRawContent)
 				classCounter = len(classRefContent)
 				classWinRate = getRoundsWinRate(mainArrayContent)
-				#PLAYER 1
-				player1Name = getPlayerName(mainArrayContent,0)
-				player1Content = extractContentLine(mainArrayContent,0)
-				player1Total = it8c.dataCalcSumList(player1Content)
-				player1Avarage = it8c.dataCalcAvgList(player1Content)
-				player1Rounds = len(player1Content)
-				player1RoundsWinR = classWinRate[0]
-				player1RoundsWinRprsnt = player1RoundsWinR / classRounds * 100
-				#PLAYER 2
-				player2Name = getPlayerName(mainArrayContent,1)
-				player2Content = extractContentLine(mainArrayContent,1)
-				player2Total = it8c.dataCalcSumList(player2Content)
-				player2Avarage = it8c.dataCalcAvgList(player2Content)
-				player2Rounds = len(player2Content)
-				player2RoundsWinR = classWinRate[1]
-				player2RoundsWinRprsnt = player2RoundsWinR / classRounds * 100
 				#CONTENT ARRAY
 				printContent = it8c.dataCreateArray(7,5,"")
 				#TITLE
-				printContent[0][0] = "Name"
-				printContent[1][0] = "Total"
-				printContent[2][0] = "Avarage"
-				printContent[3][0] = "Rounds won"
-				#PLAYER CONTENT
-				printContent[0][1] = player1Name
-				printContent[1][1] = player1Total
-				printContent[2][1] = player1Avarage
-				printContent[3][1] = player1RoundsWinR
-				printContent[3][2] = str(int(player1RoundsWinRprsnt)) +"%"
-				printContent[0][3] = player2Name
-				printContent[1][3] = player2Total
-				printContent[2][3] = player2Avarage
-				printContent[3][3] = player2RoundsWinR
-				printContent[3][4] = str(int(player2RoundsWinRprsnt)) +"%"
+				printContent[0][0] ="Name"
+				printContent[1][0] ="Total"
+				printContent[2][0] ="Avarage"
+				printContent[3][0] ="Rounds won"
+				posa =1
+				for i in range(0,2):
+					#CONTENT
+					playerContent = extractContentLine(mainArrayContent,i)
+					#NAME
+					printContent[0][posa] = getPlayerName(mainArrayContent,i)
+					#TOTAL
+					printContent[1][posa] = int(it8c.dataCalcSumList(playerContent))
+					#AVARAGE
+					printContent[2][posa] = int(it8c.dataCalcAvgList(playerContent))
+					#WIN RATE
+					printContent[3][posa] = classWinRate[i]
+					printContent[3][posa +1] = str(int(classWinRate[i] / classRounds *100)) +"%"
+					posa +=2
 				#OTHER
-				printContent[5][0] = "Rounds"
+				printContent[5][0] ="Rounds"
 				printContent[5][1] = classRounds
 				if classRounds != classCounter:
-					printContent[6][0] = "Classes"
-					printContent[6][1] = classCounter 
+					printContent[6][0] ="Classes"
+					printContent[6][1] = classCounter
 				print(it8c.vslTerminalLine(0,""))
 				print(it8c.dataSmrPrintArray(printContent," ","",0))
 				if fileSaveResults == 1:
