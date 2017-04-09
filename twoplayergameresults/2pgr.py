@@ -2,7 +2,7 @@
 # Made by IntSPstudio
 # Two Player Game Results
 # Thank you for using this software!
-# Version: 0.0.7.20170309
+# Version: 0.0.8.20170409
 # ID: 980005010
 #
 # Twitter: @IntSPstudio
@@ -12,6 +12,7 @@
 import sys
 import it8c
 import datetime
+import os
 #MAIN CONTENT CHECK
 def getContentCheck(array1Content):
 	#LIMITS
@@ -92,11 +93,14 @@ def getRoundsWinRate(array1Content):
 	return array2Content
 #START
 if __name__ == "__main__":
+	#SETTINGS
+	resultsFolderName ="results" #OUTPUT FILES
+	contentFolderName ="content" #INPUT FILES
+	fileDefSep = ";"
 	#INPUT
 	scrFile = sys.argv[0]
 	scrArg =""
 	scrRuleTest = len(sys.argv)
-	fileDefSep = ";"
 	#OUTPUT
 	fileSaveResults =0
 	fileNameO =""
@@ -114,6 +118,7 @@ if __name__ == "__main__":
 						fileNameO = str(clDate.year) + str(clDate.month) + str(clDate.day) + str(clDate.hour) + str(clDate.minute) + str(clDate.second) + fileDefFormat
 					else:
 						fileNameO = str.lower(scrArg)
+			fileNameI = contentFolderName +"/"+ fileNameI
 			if it8c.fileTextExists(fileNameI) == 1:
 				#INPUT
 				rawArrayContent = it8c.csvReadFile(fileNameI, fileDefSep)
@@ -154,8 +159,17 @@ if __name__ == "__main__":
 				print(it8c.vslTerminalLine(0,""))
 				print(it8c.dataSmrPrintArray(printContent," ","",0))
 				if fileSaveResults == 1:
+					if not os.path.exists(resultsFolderName):
+						os.makedirs(resultsFolderName)
+					fileNameO = resultsFolderName +"/"+ fileNameO
 					it8c.csvWriteFile(printContent,fileNameO,";","")
 			else:
 				print("File doesn't exists")
 	else:
-		print("Give a filename")
+		if os.path.exists(resultsFolderName):
+			if os.path.exists(contentFolderName):
+				print("Give a filename")
+		if not os.path.exists(resultsFolderName):
+			os.makedirs(resultsFolderName)
+		if not os.path.exists(contentFolderName):
+			os.makedirs(contentFolderName)
