@@ -2,7 +2,7 @@
 # Made by IntSPstudio
 # Two Player Game Results
 # Thank you for using this software!
-# Version: 0.0.8.20170409
+# Version: 0.0.9.20170506
 # ID: 980005010
 #
 # Twitter: @IntSPstudio
@@ -51,6 +51,14 @@ def getContentCheck(array1Content):
 							array2Content[ypb][2] = array1Content[ypa][2]
 							ypb +=1
 		return array2Content
+	elif array1Width == 2:
+		checka =2
+		array3Content = it8c.dataCreateArray(array1Height,checka +1,"")
+		for yp in range(0, array1Height):
+			for xp in range(0, array1Width):
+				array3Content[yp][xp] = array1Content[yp][xp]
+			array3Content[yp][checka] ="Class "+ str(yp)
+		return array3Content
 #GET PLAYER NAME
 def getPlayerName(array1Content,array1Line):
 	point = array1Content[0][array1Line]
@@ -91,6 +99,26 @@ def getRoundsWinRate(array1Content):
 				elif pointb > pointa:
 					array2Content[1] +=1
 	return array2Content
+#TOP CLASSES
+def getPlayerTopClasses(scoreContent, classContent):
+	#LIMITS
+	scoreLength = len(scoreContent)
+	classLength = len(classContent)
+	array1Content = it8c.dataFlipListObjects(sorted(scoreContent))
+	array2Content =[]
+	#CONTENT
+	for ypa in range(0,3):
+		pointa = str(array1Content[ypa])
+		for ypb in range(0,scoreLength):
+			pointb = str(scoreContent[ypb])
+			if pointa == pointb:
+				if ypb <= classLength:
+					checka = classContent[ypb]
+					array2Content.extend([checka])
+				else:
+					checka = "Class "+ str(ypb)
+					array2Content.extend([checka])
+	return array2Content
 #START
 if __name__ == "__main__":
 	#SETTINGS
@@ -122,47 +150,61 @@ if __name__ == "__main__":
 			if it8c.fileTextExists(fileNameI) == 1:
 				#INPUT
 				rawArrayContent = it8c.csvReadFile(fileNameI, fileDefSep)
-				mainArrayContent = getContentCheck(rawArrayContent)
-				#CLASSES
-				classRawContent = extractContentLine(mainArrayContent,2)
-				classRefContent = it8c.dataExtractArrayColumn(it8c.dataCheckListObjects(it8c.dataChangeListContentFormat(it8c.dataChangeListContentFormat(classRawContent,1),3)),2)
-				classRounds = len(classRawContent)
-				classCounter = len(classRefContent)
-				classWinRate = getRoundsWinRate(mainArrayContent)
-				#CONTENT ARRAY
-				printContent = it8c.dataCreateArray(7,5,"")
-				#TITLE
-				printContent[0][0] ="Name"
-				printContent[1][0] ="Total"
-				printContent[2][0] ="Avarage"
-				printContent[3][0] ="Rounds won"
-				posa =1
-				for i in range(0,2):
-					#CONTENT
-					playerContent = extractContentLine(mainArrayContent,i)
-					#NAME
-					printContent[0][posa] = getPlayerName(mainArrayContent,i)
-					#TOTAL
-					printContent[1][posa] = int(it8c.dataCalcSumList(playerContent))
-					#AVARAGE
-					printContent[2][posa] = int(it8c.dataCalcAvgList(playerContent))
-					#WIN RATE
-					printContent[3][posa] = classWinRate[i]
-					printContent[3][posa +1] = str(int(classWinRate[i] / classRounds *100)) +"%"
-					posa +=2
-				#OTHER
-				printContent[5][0] ="Rounds"
-				printContent[5][1] = classRounds
-				if classRounds != classCounter:
-					printContent[6][0] ="Classes"
-					printContent[6][1] = classCounter
-				print(it8c.vslTerminalLine(0,""))
-				print(it8c.dataSmrPrintArray(printContent," ","",0))
-				if fileSaveResults == 1:
-					if not os.path.exists(resultsFolderName):
-						os.makedirs(resultsFolderName)
-					fileNameO = resultsFolderName +"/"+ fileNameO
-					it8c.csvWriteFile(printContent,fileNameO,";","")
+				rawArrayWidth = len(rawArrayContent[0])
+				if rawArrayWidth > 1:
+					mainArrayContent = getContentCheck(rawArrayContent)
+					#CLASSES
+					classRawContent = extractContentLine(mainArrayContent,2)
+					classRefContent = it8c.dataExtractArrayColumn(it8c.dataCheckListObjects(it8c.dataChangeListContentFormat(it8c.dataChangeListContentFormat(classRawContent,1),3)),2)
+					classRawContent = extractContentLine(mainArrayContent,2)
+					classRounds = len(classRawContent)
+					classCounter = len(classRefContent)
+					classWinRate = getRoundsWinRate(mainArrayContent)
+					#CONTENT ARRAY
+					printContent = it8c.dataCreateArray(11,5,"")
+					#TITLE
+					printContent[0][0] ="Name"
+					printContent[1][0] ="Total"
+					printContent[2][0] ="Avarage"
+					printContent[3][0] ="Rounds won"
+					posa =1
+					for i in range(0,2):
+						#CONTENT
+						playerContent = extractContentLine(mainArrayContent,i)
+						#NAME
+						printContent[0][posa] = getPlayerName(mainArrayContent,i)
+						#TOTAL
+						printContent[1][posa] = int(it8c.dataCalcSumList(playerContent))
+						#AVARAGE
+						printContent[2][posa] = int(it8c.dataCalcAvgList(playerContent))
+						#WIN RATE
+						printContent[3][posa] = classWinRate[i]
+						printContent[3][posa +1] = str(int(classWinRate[i] / classRounds *100)) +"%"
+						posa +=2
+					#TOP 3 CLASSES
+					checkb = 1
+					for ypa in range(0,2):
+						pointb = extractContentLine(mainArrayContent,ypa)
+						pointa = getPlayerTopClasses(pointb,classRawContent)
+						checka = 5
+						for ypb in range(0,3):
+							pointb = "Top " +str(ypb +1)
+							printContent[checka + ypb][0] = pointb
+							printContent[checka + ypb][checkb + ypa] = pointa[ypb]#str.upper(pointa[ypb])
+						checkb +=1
+					#OTHER
+					printContent[9][0] ="Rounds"
+					printContent[9][1] = classRounds
+					if classRounds != classCounter:
+						printContent[10][0] ="Classes"
+						printContent[10][1] = classCounter
+					print(it8c.vslTerminalLine(0,""))
+					print(it8c.dataSmrPrintArray(printContent," ","",0))
+					if fileSaveResults == 1:
+						if not os.path.exists(resultsFolderName):
+							os.makedirs(resultsFolderName)
+						fileNameO = resultsFolderName +"/"+ fileNameO
+						it8c.csvWriteFile(printContent,fileNameO,";","")
 			else:
 				print("File doesn't exists")
 	else:
